@@ -8,7 +8,7 @@ import attachUser from '@/middlewares/attachUser'
 import { run } from '@grammyjs/runner'
 import { InlineKeyboard } from 'grammy'
 import { ignoreOld, sequentialize } from 'grammy-middlewares'
-import { fetchNeko, getNsfwNeko } from './utils/utils'
+import { fetchNeko, getNsfwNeko } from './helpers/utils'
 
 /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
 /*                            MENU                            */
@@ -44,7 +44,6 @@ async function runApp() {
     }
   )
   bot
-    // Middlewares
     .use(sequentialize())
     .use(ignoreOld())
     .use(attachUser)
@@ -83,9 +82,7 @@ async function runApp() {
     await ctx.answerCallbackQuery();
   });
 
-  // Errors
   bot.catch(console.error)
-  // Start bot
   await bot.init()
   run(bot)
   console.info(`Up And Running`)
