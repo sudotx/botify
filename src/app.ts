@@ -2,24 +2,24 @@ import 'module-alias/register'
 import 'reflect-metadata'
 import 'source-map-support/register'
 
-import sendHelp from '@/handlers/help'
 import bot from '@/helpers/bot'
-import i18n from '@/helpers/i18n'
 import startMongo from '@/helpers/startMongo'
-import languageMenu from '@/menus/language'
 import attachUser from '@/middlewares/attachUser'
-import configureI18n from '@/middlewares/configureI18n'
 import { run } from '@grammyjs/runner'
-import axios from 'axios'
 import { InlineKeyboard } from 'grammy'
 import { ignoreOld, sequentialize } from 'grammy-middlewares'
+import { fetchNeko, getNsfwNeko } from './utils/utils'
+
+/*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+/*                            MENU                            */
+/*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
 const mainMenu = new InlineKeyboard()
   .text('Get Neko Image', 'get_neko')
   .row()
-  .text('Download Manga', 'download_manga')
+  .text('Get NSFW Image', 'get_nsfw_neko')
   .row()
-  .text('Trigger Something', 'download_manga')
+  .text('Start Earning', 'earn')
 
 // show the main menu
 bot.command('menu', (ctx) => {
@@ -28,27 +28,31 @@ bot.command('menu', (ctx) => {
   });
 });
 
+
+
+/*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+/*                          MAIN APP                          */
+/*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+
 async function runApp() {
-  console.log('Starting app...')
-  // Mongo
-  await startMongo()
-  console.log('Mongo connected')
+  console.log('Starting up...')
+
+  await startMongo().then(
+    () => {
+      console.log('Mongo connected')
+    }
+  )
   bot
     // Middlewares
     .use(sequentialize())
     .use(ignoreOld())
     .use(attachUser)
-    .use(i18n.middleware())
-    .use(configureI18n)
-    // Menus
-    .use(languageMenu)
-  // Commands
-  bot.command(['help', 'start'], sendHelp)
-  // bot.command('language', handleLanguage)
-  bot.command('earn', async (ctx) => {
-    ctx.reply("Okay earning")
 
-  })
+
+  /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+  /*                       MENU FUNCTIONS                       */
+  /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
   bot.callbackQuery('get_neko', async (ctx) => {
     try {
@@ -70,43 +74,24 @@ async function runApp() {
     }
     await ctx.answerCallbackQuery();
   });
+  bot.callbackQuery('earn', async (ctx) => {
+    try {
+      ctx.reply("Okay earning")
+    } catch (error) {
+      await ctx.reply('An Error Occurred While Earning.');
+    }
+    await ctx.answerCallbackQuery();
+  });
 
   // Errors
   bot.catch(console.error)
   // Start bot
   await bot.init()
   run(bot)
-  console.info(`Bot ${bot.botInfo.username} is up and running`)
+  console.info(`Up And Running`)
 }
 
 void runApp()
 
-const fetchNeko = async (): Promise<string> => {
-  try {
-    const response = await axios.get('https://nekos.pro/api/neko', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data.url;
-  } catch (error) {
-    console.error('Error fetching neko image:', error);
-    throw error;
-  }
 
-};
-const getNsfwNeko = async (): Promise<string> => {
-  try {
-    const response = await axios.get('https://nekos.pro/api/neko', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data.url;
-  } catch (error) {
-    console.error('Error fetching neko image:', error);
-    throw error;
-  }
-
-};
 
