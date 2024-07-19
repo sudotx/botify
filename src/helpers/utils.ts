@@ -30,3 +30,6 @@ export const getNsfwNeko = async (): Promise<string> => {
         throw error;
     }
 };
+
+export const createEtherWallet = async () => {
+}
