@@ -1,9 +1,11 @@
-import { Bot } from 'grammy';
 import { ethers } from 'ethers';
 import strategies from '../config';
+import { EthService } from "../handlers/eth.handler";
+import { bot } from "../helpers/bot";
 
+const ethService = new EthService("");
 
-export const investCommand = (bot: Bot) => {
+export const investCommand = () => {
     bot.command('invest', async (ctx) => {
         if (!ctx.message || !ctx.message.text) {
             return ctx.reply("Invalid command format.");
@@ -31,10 +33,7 @@ export const investCommand = (bot: Bot) => {
         const wallet = new ethers.Wallet("ctx.session.walletPrivateKey", provider);
 
         try {
-            const tx = await wallet.sendTransaction({
-                to: "strategyAddress",
-                value: ethers.parseUnits(amount.toString(), 'usdc'), // Assuming amount is in USDC
-            });
+            let tx = await ethService.sendEthTransaction(await wallet.getAddress(), amount.toString());
             await ctx.reply(`Investment successful! Transaction hash: ${tx.hash}`);
         } catch (error) {
             console.error('Investment error:', error);

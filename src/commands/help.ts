@@ -1,6 +1,6 @@
-import { Bot } from 'grammy';
+import { bot } from "../helpers/bot";
 
-export const helpCommand = (bot: Bot) => {
+export const helpCommand = () => {
     bot.command('help', (ctx) => {
         ctx.reply(`
 Available commands:

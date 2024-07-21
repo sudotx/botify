@@ -2,11 +2,14 @@ import 'module-alias/register'
 import 'reflect-metadata'
 import 'source-map-support/register'
 
-import bot from '@/helpers/bot'
+import { bot } from '@/helpers/bot'
 import startMongo from '@/helpers/startMongo'
 import attachUser from '@/middlewares/attachUser'
 import { run } from '@grammyjs/runner'
 import { ignoreOld, sequentialize } from 'grammy-middlewares'
+import { checkBalanceCallback } from './callbacks/check_balances'
+import { generateWalletCallback } from './callbacks/generate_wallet'
+import { viewStrategiesCallback } from './callbacks/view_strategies'
 
 bot.api.setMyCommands([
   { command: 'menu', description: 'Show main menu' },
@@ -31,6 +34,10 @@ bot.api.setMyCommands([
     bot.catch(console.error)
     await bot.init()
     run(bot)
+
+    viewStrategiesCallback();
+    generateWalletCallback();
+    checkBalanceCallback();
 
     console.info(`Up And Running`)
   } catch (error) {

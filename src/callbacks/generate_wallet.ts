@@ -1,8 +1,8 @@
 import { fetchNeko } from '@/helpers/utils';
 import { ethers } from 'ethers';
-import { Bot } from 'grammy';
+import { bot } from "../helpers/bot";
 
-export const viewStrategiesCallback = (bot: Bot) => {
+export const generateWalletCallback = () => {
     bot.callbackQuery('generate_wallet', async (ctx) => {
         await ctx.reply("You already have a connected wallet.");
 
