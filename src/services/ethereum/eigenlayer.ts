@@ -19,9 +19,9 @@ export class EigenLayerService {
     }
 
     async deposit(amount: string) {
+        const depositAmount = ethers.parseUnits(amount, 'ether'); // Assuming 'ether' is the unit for the contract
         try {
             // Convert amount to units if necessary
-            const depositAmount = ethers.parseUnits(amount, 'ether'); // Assuming 'ether' is the unit for the contract
 
             // Send deposit transaction
             const tx = await this.contract.deposit(depositAmount);
@@ -36,9 +36,9 @@ export class EigenLayerService {
     }
 
     async repay(amount: string) {
+        const repayAmount = ethers.parseUnits(amount, 'ether'); // Assuming 'ether' is the unit for the contract
         try {
             // Convert amount to units if necessary
-            const repayAmount = ethers.parseUnits(amount, 'ether'); // Assuming 'ether' is the unit for the contract
 
             // Send repay transaction
             const tx = await this.contract.repay(repayAmount);
@@ -47,6 +47,7 @@ export class EigenLayerService {
             // Wait for transaction to be confirmed
             await tx.wait();
             console.log('Repay confirmed');
+            return tx
         } catch (error) {
             console.error('Error executing repay:', error);
         }
