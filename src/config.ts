@@ -23,5 +23,12 @@ export default {
         { id: 1, name: "Deposit USDC to Aave" },
         { id: 2, name: "Create ETH-USDC LP on Uniswap" },
         { id: 3, name: "Swap ETH to USDC on 1inch" },
-    ]
+    ],
+    UNISWAP_V2_ROUTER_ADDRESS: "0x5C69bEe701ef814a2b6A1b3eeb8d6c38F5d1f7e0",
+    UNISWAP_V2_ROUTER_ABI: [
+        'function swapExactTokensForTokens(uint256 amountIn, uint256 amountOutMin, address[] calldata path, address to, uint256 deadline) external returns (uint[] memory amounts)',
+        'function approve(address spender, uint256 amount) external returns (bool)'
+    ],
+    USDC_ADDRESS: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    USDT_ADDRESS: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
 }
