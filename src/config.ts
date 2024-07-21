@@ -1,6 +1,6 @@
 import "dotenv"
 
-module.exports = {
+export default {
     environment: process.env.NODE_ENV || "development",
     logLevel: process.env.LOG_LEVEL || "info",
 
@@ -20,5 +20,10 @@ module.exports = {
             token: process.env.TELEGRAM_TOKEN || "",
             chatId: process.env.TELEGRAM_CHAT_ID || ""
         }
-    }
+    },
+    strategies: [
+        { id: 1, name: "Deposit USDC to Aave" },
+        { id: 2, name: "Create ETH-USDC LP on Uniswap" },
+        { id: 3, name: "Swap ETH to USDC on 1inch" },
+    ]
 }
