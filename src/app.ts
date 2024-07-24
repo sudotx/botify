@@ -11,36 +11,42 @@ import { checkBalanceCallback } from './callbacks/check_balances'
 import { generateWalletCallback } from './callbacks/generate_wallet'
 import { viewStrategiesCallback } from './callbacks/view_strategies'
 
-bot.api.setMyCommands([
-  { command: 'menu', description: 'Show main menu' },
-  { command: 'help', description: 'Show help information' },
-  { command: 'wallet', description: 'View your wallet address' },
-  { command: 'invest', description: 'Invest in a strategy' },
-]);
+const setupBot = () => {
+  bot.use(sequentialize())
+    .use(ignoreOld())
+    .use(attachUser)
 
-(async function () {
+  bot.api.setMyCommands([
+    { command: 'menu', description: 'Show main menu' },
+    { command: 'help', description: 'Show help information' },
+    { command: 'wallet', description: 'View your wallet address' },
+    { command: 'invest', description: 'Invest in a strategy' },
+  ])
+
+  bot.catch(console.error)
+}
+
+const initializeCallbacks = () => {
+  viewStrategiesCallback()
+  generateWalletCallback()
+  checkBalanceCallback()
+}
+
+const startBot = async () => {
   try {
-    await startMongo().then(() => {
-      console.log('Database connected')
-    }).finally(() => {
-      console.log('Starting up...')
-    })
+    await startMongo()
+    console.log('Database connected')
 
-    bot
-      .use(sequentialize())
-      .use(ignoreOld())
-      .use(attachUser)
-
-    bot.catch(console.error)
+    setupBot()
     await bot.init()
     run(bot)
 
-    viewStrategiesCallback();
-    generateWalletCallback();
-    checkBalanceCallback();
+    initializeCallbacks()
 
-    console.info(`Up And Running`)
+    console.info('Up And Running')
   } catch (error) {
     console.error('Error during startup:', error)
   }
-})();
+}
+
+startBot()

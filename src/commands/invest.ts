@@ -1,9 +1,9 @@
 import { ethers } from 'ethers';
 import strategies from '../config';
-import { EthService } from "../handlers/eth.handler";
+// import { EthService } from "../handlers/eth.handler";
 import { bot } from "../helpers/bot";
 
-const ethService = new EthService("");
+// const ethService = new EthService("");
 
 export const investCommand = () => {
     bot.command('invest', async (ctx) => {
@@ -33,8 +33,8 @@ export const investCommand = () => {
         const wallet = new ethers.Wallet("ctx.session.walletPrivateKey", provider);
 
         try {
-            let tx = await ethService.sendEthTransaction(await wallet.getAddress(), amount.toString());
-            await ctx.reply(`Investment successful! Transaction hash: ${tx.hash}`);
+            // let tx = await ethService.sendEthTransaction(await wallet.getAddress(), amount.toString());
+            // await ctx.reply(`Investment successful! Transaction hash: ${tx.hash}`);
         } catch (error) {
             console.error('Investment error:', error);
             await ctx.reply('An error occurred while processing your investment.');

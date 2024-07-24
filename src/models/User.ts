@@ -20,3 +20,16 @@ export function findOrCreateUser(id: number) {
     }
   )
 }
+
+export function deleteUser(id: number) {
+  return UserModel.findOneAndDelete({ id })
+}
+
+export function getUserById(id: number) {
+  return UserModel.findOne({ id })
+}
+
+export function getAllUsers() {
+  return UserModel.find({})
+}
+

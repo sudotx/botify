@@ -1,67 +1,50 @@
 import { ethers } from "ethers";
 
+const PLAY_EIGEN_LAYER_ABI = [
+    'function deposit(uint256 amount) external',
+    'function repay(uint256 amount) external',
+    'function checkBalance(address account) view returns (uint256)'
+];
+
+const PLAY_EIGEN_LAYER_ADDRESS = '0xYourPlayEigenLayerContractAddress';
+
 export class EigenLayerService {
     private contract: ethers.Contract;
 
-    private readonly PLAY_EIGEN_LAYER_ABI = [
-        'function deposit(uint256 amount) external',
-        'function repay(uint256 amount) external',
-        'function checkBalance(address account) view returns (uint256)'
-    ];
-
-    private readonly PLAY_EIGEN_LAYER_ADDRESS = '0xYourPlayEigenLayerContractAddress';
-
     constructor() {
-        this.contract = new ethers.Contract(
-            this.PLAY_EIGEN_LAYER_ADDRESS,
-            this.PLAY_EIGEN_LAYER_ABI,
-        );
+        this.contract = new ethers.Contract(PLAY_EIGEN_LAYER_ADDRESS, PLAY_EIGEN_LAYER_ABI);
+    }
+
+    private async executeTransaction(method: string, amount: string) {
+        const parsedAmount = ethers.parseUnits(amount, 'ether');
+        try {
+            const tx = await this.contract[method](parsedAmount);
+            console.log(`${method} Transaction Hash:`, tx.hash);
+            await tx.wait();
+            console.log(`${method} confirmed`);
+            return tx;
+        } catch (error) {
+            console.error(`Error executing ${method}:`, error);
+            throw error;
+        }
     }
 
     async deposit(amount: string) {
-        const depositAmount = ethers.parseUnits(amount, 'ether'); // Assuming 'ether' is the unit for the contract
-        try {
-            // Convert amount to units if necessary
-
-            // Send deposit transaction
-            const tx = await this.contract.deposit(depositAmount);
-            console.log('Deposit Transaction Hash:', tx.hash);
-
-            // Wait for transaction to be confirmed
-            await tx.wait();
-            console.log('Deposit confirmed');
-        } catch (error) {
-            console.error('Error executing deposit:', error);
-        }
+        return this.executeTransaction('deposit', amount);
     }
 
     async repay(amount: string) {
-        const repayAmount = ethers.parseUnits(amount, 'ether'); // Assuming 'ether' is the unit for the contract
-        try {
-            // Convert amount to units if necessary
-
-            // Send repay transaction
-            const tx = await this.contract.repay(repayAmount);
-            console.log('Repay Transaction Hash:', tx.hash);
-
-            // Wait for transaction to be confirmed
-            await tx.wait();
-            console.log('Repay confirmed');
-            return tx
-        } catch (error) {
-            console.error('Error executing repay:', error);
-        }
+        return this.executeTransaction('repay', amount);
     }
 
     async checkBalance(account: string): Promise<string> {
         try {
-            // Convert address to PublicKey if necessary
             const balance = await this.contract.checkBalance(account);
-            // Convert balance to ether if necessary
-            return ethers.formatUnits(balance, 'ether'); // Assuming 'ether' is the unit for the contract
+            return ethers.formatUnits(balance, 'ether');
+
         } catch (error) {
             console.error('Error fetching balance:', error);
-            return 'Error';
+            throw error;
         }
     }
 }

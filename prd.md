@@ -93,3 +93,6 @@ PRD:
    - Integration of more complex DeFi strategies (e.g., yield farming, leveraged positions)
    - Advanced analytics and performance projections
    - Mobile app for enhanced user experience
+
+
+   Want is USDC
