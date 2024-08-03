@@ -3,7 +3,7 @@ import 'reflect-metadata'
 import 'source-map-support/register'
 
 import { bot } from '@/helpers/bot'
-import startMongo from '@/helpers/startMongo'
+import startDatabase from '@/helpers/startMongo'
 import attachUser from '@/middlewares/attachUser'
 import { run } from '@grammyjs/runner'
 import { ignoreOld, sequentialize } from 'grammy-middlewares'
@@ -34,7 +34,7 @@ const initializeCallbacks = () => {
 
 const startBot = async () => {
   try {
-    await startMongo()
+    await startDatabase()
     console.log('Database connected')
 
     setupBot()
