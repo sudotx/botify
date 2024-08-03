@@ -1,35 +1,25 @@
-import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
+import prisma from '../prisma';
 
-@modelOptions({ schemaOptions: { timestamps: true } })
-export class User {
-  @prop({ required: true, index: true, unique: true })
-  id!: number
-  @prop({ required: true, default: 'en' })
-  language!: string
+export async function findOrCreateUser(id: number) {
+  return prisma.user.upsert({
+    where: { id },
+    update: {},
+    create: { id },
+  });
 }
 
-const UserModel = getModelForClass(User)
-
-export function findOrCreateUser(id: number) {
-  return UserModel.findOneAndUpdate(
-    { id },
-    {},
-    {
-      upsert: true,
-      new: true,
-    }
-  )
+export async function deleteUser(id: number) {
+  return prisma.user.delete({
+    where: { id },
+  });
 }
 
-export function deleteUser(id: number) {
-  return UserModel.findOneAndDelete({ id })
+export async function getUserById(id: number) {
+  return prisma.user.findUnique({
+    where: { id },
+  });
 }
 
-export function getUserById(id: number) {
-  return UserModel.findOne({ id })
+export async function getAllUsers() {
+  return prisma.user.findMany();
 }
-
-export function getAllUsers() {
-  return UserModel.find({})
-}
-

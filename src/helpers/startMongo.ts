@@ -1,8 +1,8 @@
 import { connect } from 'mongoose'
 import env from '@/helpers/env'
 
-function startMongo() {
+function startDatabase() {
   return connect(env.MONGO)
 }
 
-export default startMongo
+export default startDatabase

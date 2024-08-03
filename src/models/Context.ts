@@ -1,7 +1,6 @@
-import { Context as BaseContext } from 'grammy'
-import { DocumentType } from '@typegoose/typegoose'
-import { I18nContext } from '@grammyjs/i18n/dist/source'
-import { User } from '@/models/User'
+import { I18nContext } from '@grammyjs/i18n/dist/source';
+import { User } from '@prisma/client';
+import { Context as BaseContext } from 'grammy';
 
 interface SessionData {
   walletAddress?: string;
@@ -10,7 +9,7 @@ interface SessionData {
 
 class Context extends BaseContext {
   readonly i18n!: I18nContext
-  dbuser!: DocumentType<User>
+  dbuser!: User
 
   replyWithLocalization: this['reply'] = (text, other, ...rest) => {
     text = this.i18n.t(text)
